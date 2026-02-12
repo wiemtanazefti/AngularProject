@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
-import { Suggestion } from '../../models/suggestion';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Suggestion } from '../../../models/suggestion';
 
 @Component({
-  selector: 'app-list-suggestion',
-  templateUrl: './list-suggestion.component.html',
-  styleUrls: ['./list-suggestion.component.css']
+  selector: 'app-suggestion-details',
+  templateUrl: './suggestion-details.component.html',
+  styleUrls: ['./suggestion-details.component.css']
 })
-export class ListSuggestionComponent {
+export class SuggestionDetailsComponent implements OnInit {
 
-  searchText: string = '';
-  favorites: Suggestion[] = [];
+  suggestionId!: number;
+  suggestion!: Suggestion | undefined;
 
   suggestions: Suggestion[] = [
     {
@@ -50,11 +51,26 @@ export class ListSuggestionComponent {
     }
   ];
 
-  likeSuggestion(s: Suggestion) {
-    s.nbLikes++;
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+
+    this.suggestionId = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.suggestion = this.suggestions.find(
+      s => s.id === this.suggestionId
+    );
+
+    if (!this.suggestion) {
+      this.router.navigate(['/suggestions']);
+    }
   }
 
-  addToFavorites(s: Suggestion) {
-    this.favorites.push(s);
+  goBack() {
+    this.router.navigate(['/suggestions']);
   }
+
 }
