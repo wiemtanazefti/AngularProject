@@ -1,57 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Suggestion } from '../../../models/suggestion';
+import { SuggestionService } from '../suggestion.service';
 
 @Component({
   selector: 'app-list-suggestion',
   templateUrl: './list-suggestion.component.html',
   styleUrls: ['./list-suggestion.component.css']
 })
-export class ListSuggestionComponent {
+export class ListSuggestionComponent implements OnInit {
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private suggestionService: SuggestionService
+  ) {}
 
   searchText: string = '';
   favorites: Suggestion[] = [];
+  suggestions: Suggestion[] = [];
 
-  suggestions: Suggestion[] = [
-    {
-      id: 1,
-      title: 'Organiser une journée team building',
-      description: 'Organisation d’une journée pour renforcer la cohésion.',
-      category: 'Événements',
-      date: new Date('2025-01-20'),
-      status: 'acceptee',
-      nbLikes: 10
-    },
-    {
-      id: 2,
-      title: 'Améliorer le système de réservation',
-      description: 'Amélioration du système de réservation.',
-      category: 'Technologie',
-      date: new Date('2025-01-15'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 3,
-      title: 'Créer un système de récompenses',
-      description: 'Programme de récompenses pour motiver les employés.',
-      category: 'RH',
-      date: new Date('2025-01-25'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 4,
-      title: 'Moderniser l’interface utilisateur',
-      description: 'Refonte de l’interface utilisateur.',
-      category: 'Technologie',
-      date: new Date('2025-01-30'),
-      status: 'en_attente',
-      nbLikes: 0
-    }
-  ];
+  ngOnInit(): void {
+    this.suggestions = this.suggestionService.getSuggestions();
+  }
 
   likeSuggestion(s: Suggestion) {
     s.nbLikes++;
@@ -66,5 +36,4 @@ export class ListSuggestionComponent {
   goToDetails(id: number) {
     this.router.navigate(['/suggestions', id]);
   }
-
 }

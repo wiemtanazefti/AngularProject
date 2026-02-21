@@ -17,10 +17,8 @@ import { SuggestionDetailsComponent } from './features/suggestions/suggestion-de
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    ListSuggestionComponent,
     HomeComponent,
-    NotfoundComponent,
-    SuggestionDetailsComponent
+    NotfoundComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Suggestion } from '../../../models/suggestion';
+import { SuggestionService } from '../suggestion.service';
 
 @Component({
   selector: 'app-suggestion-details',
@@ -12,57 +13,15 @@ export class SuggestionDetailsComponent implements OnInit {
   suggestionId!: number;
   suggestion!: Suggestion | undefined;
 
-  suggestions: Suggestion[] = [
-    {
-      id: 1,
-      title: 'Organiser une journée team building',
-      description: 'Organisation d’une journée pour renforcer la cohésion.',
-      category: 'Événements',
-      date: new Date('2025-01-20'),
-      status: 'acceptee',
-      nbLikes: 10
-    },
-    {
-      id: 2,
-      title: 'Améliorer le système de réservation',
-      description: 'Amélioration du système de réservation.',
-      category: 'Technologie',
-      date: new Date('2025-01-15'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 3,
-      title: 'Créer un système de récompenses',
-      description: 'Programme de récompenses pour motiver les employés.',
-      category: 'RH',
-      date: new Date('2025-01-25'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 4,
-      title: 'Moderniser l’interface utilisateur',
-      description: 'Refonte de l’interface utilisateur.',
-      category: 'Technologie',
-      date: new Date('2025-01-30'),
-      status: 'en_attente',
-      nbLikes: 0
-    }
-  ];
-
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private suggestionService: SuggestionService
   ) {}
 
   ngOnInit(): void {
-
     this.suggestionId = Number(this.route.snapshot.paramMap.get('id'));
-
-    this.suggestion = this.suggestions.find(
-      s => s.id === this.suggestionId
-    );
+    this.suggestion = this.suggestionService.getById(this.suggestionId);
 
     if (!this.suggestion) {
       this.router.navigate(['/suggestions']);
@@ -72,5 +31,4 @@ export class SuggestionDetailsComponent implements OnInit {
   goBack() {
     this.router.navigate(['/suggestions']);
   }
-
 }
