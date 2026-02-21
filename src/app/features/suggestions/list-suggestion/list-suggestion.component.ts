@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Suggestion } from '../../../models/suggestion';
-import { SuggestionService } from '../suggestion.service';
+import { SuggestionService } from '../../../core/services/suggestion.service';
 
 @Component({
   selector: 'app-list-suggestion',
@@ -10,27 +10,33 @@ import { SuggestionService } from '../suggestion.service';
 })
 export class ListSuggestionComponent implements OnInit {
 
+  suggestions: Suggestion[] = [];
+
   constructor(
     private router: Router,
     private suggestionService: SuggestionService
   ) {}
 
-  searchText: string = '';
-  favorites: Suggestion[] = [];
-  suggestions: Suggestion[] = [];
-
   ngOnInit(): void {
-    this.suggestions = this.suggestionService.getSuggestions();
+    this.loadSuggestions();
+  }
+
+  loadSuggestions() {
+    this.suggestionService.getSuggestionsHttp().subscribe(data => {
+      this.suggestions = data;
+    });
   }
 
   likeSuggestion(s: Suggestion) {
-    s.nbLikes++;
+    this.suggestionService.updateLikesHttp(s.id, s.nbLikes + 1).subscribe(() => {
+      s.nbLikes++;
+    });
   }
 
-  addToFavorites(s: Suggestion) {
-    if (!this.favorites.includes(s)) {
-      this.favorites.push(s);
-    }
+  deleteSuggestion(id: number) {
+    this.suggestionService.deleteSuggestionHttp(id).subscribe(() => {
+      this.suggestions = this.suggestions.filter(s => s.id !== id);
+    });
   }
 
   goToDetails(id: number) {

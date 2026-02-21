@@ -1,9 +1,10 @@
-<div class="container">
-  <h2>Détails de la suggestion</h2>
+<div *ngIf="suggestion">
+  <h2>{{ suggestion.title }}</h2>
+  <p>{{ suggestion.description }}</p>
+  <p><b>Catégorie:</b> {{ suggestion.category }}</p>
+  <p><b>Status:</b> {{ suggestion.status }}</p>
+  <p><b>Likes:</b> {{ suggestion.nbLikes }}</p>
 
-  <p>ID sélectionné : {{ suggestionId }}</p>
-
-  <button routerLink="/suggestions">
-    ⬅ Retour à la liste
-  </button>
+  <button (click)="deleteSuggestion()">🗑 Supprimer</button>
+  <button (click)="goBack()">⬅ Retour</button>
 </div>

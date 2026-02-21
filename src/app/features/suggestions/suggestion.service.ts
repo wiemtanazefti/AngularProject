@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Suggestion } from '../../models/suggestion';
 
 @Injectable({
@@ -6,36 +8,37 @@ import { Suggestion } from '../../models/suggestion';
 })
 export class SuggestionService {
 
-  private suggestions: Suggestion[] = [
-    {
-      id: 1,
-      title: 'Organiser une journée team building',
-      description: 'Organisation d’une journée pour renforcer la cohésion.',
-      category: 'Activités et événements',
-      date: new Date('2025-01-20'),
-      status: 'en_attente',
-      nbLikes: 10
-    },
-    {
-      id: 2,
-      title: 'Améliorer le système de réservation',
-      description: 'Amélioration du système de réservation.',
-      category: 'Technologie et services numériques',
-      date: new Date('2025-01-15'),
-      status: 'refusee',
-      nbLikes: 0
-    }
-  ];
+  private apiUrl = 'http://localhost:3000/suggestions';
 
-  getSuggestions(): Suggestion[] {
-    return this.suggestions;
+  constructor(private http: HttpClient) {}
+
+  // GET ALL
+  getSuggestionsHttp(): Observable<Suggestion[]> {
+    return this.http.get<Suggestion[]>(this.apiUrl);
   }
 
-  addSuggestion(s: Suggestion) {
-    this.suggestions.push(s);
+  // GET BY ID
+  getSuggestionByIdHttp(id: number): Observable<Suggestion> {
+    return this.http.get<Suggestion>(`${this.apiUrl}/${id}`);
   }
 
-  getById(id: number): Suggestion | undefined {
-    return this.suggestions.find(s => s.id === id);
+  // POST
+  addSuggestionHttp(s: Suggestion): Observable<Suggestion> {
+    return this.http.post<Suggestion>(this.apiUrl, s);
+  }
+
+  // PUT
+  updateSuggestionHttp(id: number, s: Suggestion): Observable<Suggestion> {
+    return this.http.put<Suggestion>(`${this.apiUrl}/${id}`, s);
+  }
+
+  // DELETE
+  deleteSuggestionHttp(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  // PATCH (Like)
+  updateLikesHttp(id: number, nbLikes: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${id}`, { nbLikes });
   }
 }

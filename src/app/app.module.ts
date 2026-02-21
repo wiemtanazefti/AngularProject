@@ -11,6 +11,7 @@ import { ListSuggestionComponent } from './features/suggestions/list-suggestion/
 import { HomeComponent } from './core/home/home.component';
 import { NotfoundComponent } from './core/notfound/notfound.component';
 import { SuggestionDetailsComponent } from './features/suggestions/suggestion-details/suggestion-details.component';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { SuggestionDetailsComponent } from './features/suggestions/suggestion-de
     AppRoutingModule,
     RouterModule
   ],
-  providers: [],
+  providers: [provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

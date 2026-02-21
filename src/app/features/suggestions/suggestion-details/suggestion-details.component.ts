@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Suggestion } from '../../../models/suggestion';
-import { SuggestionService } from '../suggestion.service';
+import { SuggestionService } from '../../../core/services/suggestion.service';
 
 @Component({
   selector: 'app-suggestion-details',
@@ -10,8 +10,7 @@ import { SuggestionService } from '../suggestion.service';
 })
 export class SuggestionDetailsComponent implements OnInit {
 
-  suggestionId!: number;
-  suggestion!: Suggestion | undefined;
+  suggestion!: Suggestion;
 
   constructor(
     private route: ActivatedRoute,
@@ -20,12 +19,18 @@ export class SuggestionDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.suggestionId = Number(this.route.snapshot.paramMap.get('id'));
-    this.suggestion = this.suggestionService.getById(this.suggestionId);
+    const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    if (!this.suggestion) {
+    this.suggestionService.getSuggestionByIdHttp(id).subscribe({
+      next: (data) => this.suggestion = data,
+      error: () => this.router.navigate(['/suggestions'])
+    });
+  }
+
+  deleteSuggestion() {
+    this.suggestionService.deleteSuggestionHttp(this.suggestion.id).subscribe(() => {
       this.router.navigate(['/suggestions']);
-    }
+    });
   }
 
   goBack() {
